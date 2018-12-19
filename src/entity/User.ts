@@ -5,6 +5,17 @@ import { Booking } from "./Booking";
 @Entity()
 export class User {
 
+    public static create(params: Partial<User>) {
+        const user = new User();
+        user.name = params.name || "";
+        user.userName = params.userName || "";
+        user.email = params.email || "";
+        user.password = params.password || "";
+        user.carSpaces = params.carSpaces || Promise.resolve([]);
+        user.bookings = params.bookings || Promise.resolve([]);
+        return user;
+    }
+
     @PrimaryGeneratedColumn()
     id: number;
 

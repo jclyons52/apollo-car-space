@@ -33,4 +33,8 @@ export const typeDefs = gql`
   type Query {
       user(id: Int!): User
   }
+
+  type Mutation {
+      populateDB(bookingCount: Int): Boolean
+  }
 `;

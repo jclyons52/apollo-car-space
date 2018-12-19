@@ -4,14 +4,24 @@ import { Booking } from "./Booking"
 
 @Entity()
 export class CarSpace {
+
+    static create(params: Partial<CarSpace> & { owner: Promise<User> }): CarSpace {
+        const carSpace = new CarSpace();
+        carSpace.address = params.address || "";
+        carSpace.latitude = params.latitude || "";
+        carSpace.longitude = params.longitude || "";
+        carSpace.owner = params.owner
+        return carSpace
+    }
+
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
-    latitude: number;
+    latitude: string;
 
     @Column()
-    longitude: number;
+    longitude: string;
 
     @Column()
     address: string;

@@ -1,27 +1,12 @@
 import "reflect-metadata";
-import { createConnection } from "typeorm";
 import * as express from "express"
-import { ApolloServer } from 'apollo-server-express'
 import * as session from "express-session";
-import { ResolverFactory } from "./resolvers";
-import { typeDefs } from "./typeDefs";
-import { User } from "./entity/User";
-import { Booking } from "./entity/Booking";
-import { CarSpace } from "./entity/CarSpace";
-
-
+import { Container } from "./Container";
 
 const start = async () => {
 
-    // Construct a schema, using GraphQL schema language
-    const connection = await createConnection()
-    const resolverFactory = new ResolverFactory(
-        connection.getRepository(User),
-        connection.getRepository(Booking),
-        connection.getRepository(CarSpace),
-        )
-    const resolvers = resolverFactory.generate()
-    const server = new ApolloServer({ typeDefs, resolvers });
+    const container = new Container()
+    const server = await container.apolloServer()
 
     const app = express();
     app.use(
