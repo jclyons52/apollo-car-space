@@ -1,9 +1,9 @@
-import { IResolvers } from "graphql-tools"
 import { Repository } from "typeorm";
 import { User } from "./entity/User";
 import { Booking } from "./entity/Booking";
 import { CarSpace } from "./entity/CarSpace";
 import { BookingFactory } from "./factory/BookingFactory";
+import { Resolvers, UserResolvers, BookingResolvers, CarSpaceResolvers } from "./generated/graphqlgen";
 
 export class ResolverFactory {
     constructor(
@@ -11,53 +11,69 @@ export class ResolverFactory {
         private bookingRepository: Repository<Booking>,
         private carSpaceRepository: Repository<CarSpace>,
         private bookingFactory: BookingFactory
-        ) {}
+    ) { }
 
-    public generate(): IResolvers {
+    public generate(): Resolvers {
         return {
             Query: {
-                user: (_, args) => {
+                user: async (_, args) => {
                     const id = args.id
-                    return this.userRepository.findOne(id)
+                    const user = await this.userRepository.findOne(id)
+                    return user ? user : null
                 }
             },
             Mutation: {
-                populateDB: async (count: number) => {
-                   const bookings = this.bookingFactory.createMany(count)
-                   await this.bookingRepository.save(bookings)
-                   return true
+                populateDB: async (_, data) => {
+                    const bookings = this.bookingFactory.createMany(data.bookingCount || 1)
+                    await this.bookingRepository.save(bookings)
+                    return true
                 }
             },
             User: {
-                bookings: (user: User) => {
+                ...UserResolvers.defaultResolvers,
+                bookings: (user) => {
                     return this.bookingRepository.find({ where: { userId: user.id } })
                 },
-                carSpaces: (user: User) => {
-                    return this.carSpaceRepository.find({ where: { ownerId: user.id }})
+                carSpaces: (user) => {
+                    return this.carSpaceRepository.find({ where: { ownerId: user.id } })
                 }
             },
             Booking: {
-                carSpace: (booking: Booking) => {
-                    return this.carSpaceRepository.findOne({ 
-                        where: { bookings: [booking] } 
-                    })
-                },
-                user: (booking: Booking) => {
-                    return  this.userRepository.findOne({
+                ...BookingResolvers.defaultResolvers,
+                carSpace: async (booking) => {
+                    const carSpace = await this.carSpaceRepository.findOne({
                         where: { bookings: [booking] }
                     })
+                    if (!carSpace) {
+                        throw new Error(`car space not found for booking ${booking.id}`)
+                    }
+                    return carSpace
+                },
+                user: async (booking) => {
+                    const user = await this.userRepository.findOne({
+                        where: { bookings: [booking] }
+                    })
+                    if (!user) {
+                        throw new Error("could not find user")
+                    }
+                    return user
                 }
             },
             CarSpace: {
-                bookings: (carSpace: CarSpace) => {
-                    return this.bookingRepository.find({ 
+                ...CarSpaceResolvers.defaultResolvers,
+                bookings: (carSpace) => {
+                    return this.bookingRepository.find({
                         where: { carSpaceId: carSpace.id }
                     })
                 },
-                owner: (carSpace: CarSpace) => {
-                    return this.userRepository.findOne({
+                owner: async (carSpace) => {
+                    const user = await this.userRepository.findOne({
                         where: { carSpaces: [carSpace] }
                     })
+                    if (!user) {
+                        throw new Error("could not find owner")
+                    }
+                    return user
                 }
             }
         }

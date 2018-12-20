@@ -4,12 +4,12 @@ import { ResolverFactory } from "./resolvers";
 import { User } from "./entity/User";
 import { Booking } from "./entity/Booking";
 import { CarSpace } from "./entity/CarSpace";
-import { IResolvers } from "graphql-tools";
 import { ApolloServer } from "apollo-server-express";
 import { typeDefs } from "./typeDefs";
 import { UserFactory } from "./factory/UserFactory";
 import { CarSpaceFactory } from "./factory/CarSpaceFactory";
 import { BookingFactory } from "./factory/BookingFactory";
+import { Resolvers } from "./generated/graphqlgen";
 
 
 export interface IConfig {
@@ -57,14 +57,14 @@ export class Container {
     }
 
     @Memoize(() => 1)
-    async resolvers(): Promise<IResolvers> {
+    async resolvers(): Promise<Resolvers> {
         const resolverFactory = await this.resolverFactory({})
         return resolverFactory.generate()
     }
 
     @Memoize(() => 1)
     async apolloServer(): Promise<ApolloServer> {
-        const resolvers = await this.resolvers()
+        const resolvers: any = await this.resolvers()
        return new ApolloServer({ typeDefs, resolvers });
     }
 

@@ -1,40 +1,6 @@
 import { gql } from 'apollo-server-express'
+import * as fs from 'fs';
+import * as path from 'path';
 
-export const typeDefs = gql`
- scalar Date
-
-  type CarSpace {
-      id: Int!
-      longitude: Int!
-      latitude: Int!
-      address: String!
-      owner: User!
-      bookings: [Booking]
-  }
-
-  type User {
-      id: Int!
-      name: String!
-      userName: String!
-      email: String!
-      password: String!
-      carSpaces: [CarSpace]
-      bookings: [Booking]
-  }
-
-  type Booking {
-      id: Int!
-      carSpace: CarSpace!
-      user: User!
-      start: Date!
-      end: Date!
-  }
-
-  type Query {
-      user(id: Int!): User
-  }
-
-  type Mutation {
-      populateDB(bookingCount: Int): Boolean
-  }
-`;
+const schema = fs.readFileSync(path.resolve(__dirname, 'schema.graphql'), 'utf8')
+export const typeDefs = gql(schema);

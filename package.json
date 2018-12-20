@@ -8,6 +8,8 @@
       "@types/express-session": "^1.15.11",
       "@types/graphql": "^14.0.3",
       "@types/node": "^10.12.15",
+      "gql2ts": "^1.10.1",
+      "graphqlgen": "^0.4.0",
       "ts-node": "7.0.1",
       "typescript": "3.2.2"
    },
@@ -19,12 +21,14 @@
       "express-session": "^1.15.6",
       "faker": "^4.1.0",
       "graphql": "^14.0.2",
+      "graphql-import": "^0.7.1",
       "lodash-decorators": "^6.0.0",
       "mysql": "^2.14.1",
       "reflect-metadata": "^0.1.10",
       "typeorm": "0.2.9"
    },
    "scripts": {
-      "start": "ts-node src/index.ts"
+      "start": "ts-node src/index.ts",
+      "graphqlgen": "graphqlgen"
    }
 }

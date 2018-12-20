@@ -1,0 +1,36 @@
+scalar Date
+
+type Query {
+    user(id: Int!): User
+}
+
+type Mutation {
+    populateDB(bookingCount: Int): Boolean
+}
+
+type User {
+    id: Int!
+    name: String!
+    userName: String!
+    email: String!
+    password: String!
+    carSpaces: [CarSpace]
+    bookings: [Booking]
+}
+
+type CarSpace {
+    id: Int!
+    longitude: String!
+    latitude: String!
+    address: String!
+    owner: User!
+    bookings: [Booking]
+}
+
+type Booking {
+    id: Int!
+    carSpace: CarSpace!
+    user: User!
+    start: Date!
+    end: Date!
+}
