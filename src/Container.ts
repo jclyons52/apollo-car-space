@@ -1,16 +1,11 @@
 import { createConnection, Connection, Repository } from "typeorm";
 import { Memoize } from "lodash-decorators";
-import { ResolverFactory } from "./resolvers";
 import { User } from "./entity/User";
 import { Booking } from "./entity/Booking";
 import { CarSpace } from "./entity/CarSpace";
-import { ApolloServer } from "apollo-server-express";
-import { typeDefs } from "./typeDefs";
 import { UserFactory } from "./factory/UserFactory";
 import { CarSpaceFactory } from "./factory/CarSpaceFactory";
 import { BookingFactory } from "./factory/BookingFactory";
-import { Resolvers } from "./generated/graphqlgen";
-
 
 export interface IConfig {
     env: "test" | "dev" | "prod"
@@ -40,32 +35,6 @@ export class Container {
     async carSpaceRepository(): Promise<Repository<CarSpace>> {
         const connection = await this.connection()
         return connection.getRepository(CarSpace)
-    }
-
-    @Memoize(() => 1)
-    async resolverFactory({
-        userRepository = this.userRepository(),
-        bookingRepository = this.bookingRepository(),
-        carSpaceRepository = this.carSpaceRepository(),
-    }): Promise<ResolverFactory> {
-        return new ResolverFactory(
-            await userRepository, 
-            await bookingRepository, 
-            await carSpaceRepository, 
-            this.bookingFactory(),
-        )
-    }
-
-    @Memoize(() => 1)
-    async resolvers(): Promise<Resolvers> {
-        const resolverFactory = await this.resolverFactory({})
-        return resolverFactory.generate()
-    }
-
-    @Memoize(() => 1)
-    async apolloServer(): Promise<ApolloServer> {
-        const resolvers: any = await this.resolvers()
-       return new ApolloServer({ typeDefs, resolvers });
     }
 
     @Memoize(() => 1)

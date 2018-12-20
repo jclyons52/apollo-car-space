@@ -1,12 +1,15 @@
 import "reflect-metadata";
-import * as express from "express"
+import * as express from "express";
 import * as session from "express-session";
 import { Container } from "./Container";
+import { resolvers } from './resolvers';
+import { typeDefs } from './typeDefs';
+import { ApolloServer } from "apollo-server-express";
 
 const start = async () => {
 
     const container = new Container()
-    const server = await container.apolloServer()
+    const server = new ApolloServer({ typeDefs, resolvers, context: container });
 
     const app = express();
     app.use(

@@ -1,6 +1,6 @@
-// import { Container } from "./Container";
+import { Container } from "./Container";
 
-export type Context = {}
+export type Context = Container
 
 export interface User {
     id: number
