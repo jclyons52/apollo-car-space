@@ -1,7 +1,7 @@
+import * as faker from "faker";
 import { CarSpace } from "../entity/CarSpace";
 import { Factory } from "./Factory";
 import { UserFactory } from "./UserFactory";
-import * as faker from 'faker';
 
 export class CarSpaceFactory extends Factory<CarSpace> {
     constructor(private userFactory: UserFactory) {
@@ -13,7 +13,7 @@ export class CarSpaceFactory extends Factory<CarSpace> {
         latitude = faker.address.latitude(),
         owner = Promise.resolve(this.userFactory.create({})),
     }: Partial<CarSpace>): CarSpace {
-        return CarSpace.create({ address, longitude, latitude, owner })
+        return CarSpace.create({ address, longitude, latitude, owner });
     }
-    
+
 }

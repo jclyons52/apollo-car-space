@@ -1,13 +1,23 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm"
-import { CarSpace } from "./CarSpace"
+import { IsDate, validate } from "class-validator";
+import {
+    BeforeInsert,
+    BeforeUpdate,
+    Column,
+    Entity,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+} from "typeorm";
+import { CarSpace } from "./CarSpace";
 import { User } from "./User";
 
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
+type NonFunctionProperties<T> = Pick<T, NonFunctionPropertyNames<T>>;
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 @Entity()
 export class Booking {
 
-    static create(params: Omit<Booking, "id">): Booking {
+    public static create(params: Omit<NonFunctionProperties<Booking>, "id">): Booking {
         const booking = new Booking();
         booking.start = params.start;
         booking.end = params.end;
@@ -17,17 +27,29 @@ export class Booking {
     }
 
     @PrimaryGeneratedColumn()
-    id: number;
+    public id: number;
 
+    @IsDate()
     @Column()
-    start: Date;
+    public start: Date;
 
+    @IsDate()
     @Column()
-    end: Date;
+    public end: Date;
 
     @ManyToOne(() => CarSpace)
-    carSpace: Promise<CarSpace>;
+    public carSpace: Promise<CarSpace>;
 
     @ManyToOne(() => User)
-    user: Promise<User>;
+    public user: Promise<User>;
+
+    @BeforeInsert()
+    @BeforeUpdate()
+    public async validate() {
+        const errors = await validate(this);
+        if (errors.length > 0) {
+            const errString = errors.map((err) => err.toString()).join("; ");
+            throw new Error(errString);
+        }
+    }
 }

@@ -6,6 +6,7 @@ type Query {
 
 type Mutation {
     populateDB(bookingCount: Int): Boolean
+    register(name: String!,  userName: String!, email: String!, password: String!): User
 }
 
 type User {

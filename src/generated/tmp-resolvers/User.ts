@@ -11,5 +11,5 @@ export const User: UserResolvers.Type = {
   },
   bookings: (parent, args, ctx) => {
     throw new Error("Resolver not implemented");
-  }
+  },
 };

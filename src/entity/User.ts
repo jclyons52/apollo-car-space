@@ -1,6 +1,7 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
-import { CarSpace } from "./CarSpace"
+import { IsEmail, validate } from "class-validator";
+import {BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import { Booking } from "./Booking";
+import { CarSpace } from "./CarSpace";
 
 @Entity()
 export class User {
@@ -17,23 +18,34 @@ export class User {
     }
 
     @PrimaryGeneratedColumn()
-    id: number;
+    public id: number;
 
     @Column()
-    name: string;
+    public name: string;
 
     @Column()
-    userName: string;
+    public userName: string;
+
+    @IsEmail()
+    @Column()
+    public email: string;
 
     @Column()
-    email: string;
+    public password: string;
 
-    @Column()
-    password: string;
+    @OneToMany(() => CarSpace, (carSpace) => carSpace.owner)
+    public carSpaces: Promise<CarSpace[]>;
 
-    @OneToMany(() => CarSpace, carSpace => carSpace.owner)
-    carSpaces: Promise<CarSpace[]>;
+    @OneToMany(() => Booking, (booking) => booking.user)
+    public bookings: Promise<Booking[]>;
 
-    @OneToMany(() => Booking, booking => booking.user)
-    bookings: Promise<Booking[]>;
+    @BeforeInsert()
+    @BeforeUpdate()
+    public async validate() {
+        const errors = await validate(this);
+        if (errors.length > 0) {
+            const errString = errors.map((err) => err.toString()).join("; ");
+            throw new Error(errString);
+        }
+    }
 }

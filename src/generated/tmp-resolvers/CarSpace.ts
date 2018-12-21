@@ -11,5 +11,5 @@ export const CarSpace: CarSpaceResolvers.Type = {
   },
   bookings: (parent, args, ctx) => {
     throw new Error("Resolver not implemented");
-  }
+  },
 };
