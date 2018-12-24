@@ -3,16 +3,16 @@
 
 import { Resolvers } from "../graphqlgen";
 
-import { Booking } from "./Booking";
-import { CarSpace } from "./CarSpace";
-import { Mutation } from "./Mutation";
 import { Query } from "./Query";
 import { User } from "./User";
+import { CarSpace } from "./CarSpace";
+import { Booking } from "./Booking";
+import { Mutation } from "./Mutation";
 
 export const resolvers: Resolvers = {
   Query,
   User,
   CarSpace,
   Booking,
-  Mutation,
+  Mutation
 };

@@ -1,4 +1,4 @@
-import { User } from "../entity/User";
+import * as bcrypt from "bcryptjs";
 import { MutationResolvers } from "../generated/graphqlgen";
 
 export const Mutation: MutationResolvers.Type = {
@@ -11,7 +11,18 @@ export const Mutation: MutationResolvers.Type = {
     },
     register: async (_, data, c) => {
         const userRepository = await c.userRepository();
-        const user = User.create(data);
+        const count = await userRepository.count({ where: { email: data.email } });
+        if (count > 0) {
+            throw new Error("user already registered");
+        }
+        const salt = await bcrypt.genSalt(8);
+        const hash = await bcrypt.hash(data.password, salt);
+        const user = userRepository.create({ ...data, password: hash });
         return userRepository.save(user);
+    },
+    login: async (_, data, c) => {
+        const userRepository = await c.userRepository();
+        const user = await userRepository.findOneOrFail({ where: { email: data.email } });
+        return bcrypt.compare(data.password, user.password);
     },
 };

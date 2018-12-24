@@ -6,7 +6,7 @@ import { Container } from "./Container";
 import { resolvers } from "./resolvers";
 import { typeDefs } from "./typeDefs";
 
-export const startServer = async (container = new Container()) => {
+export const startServer = (container = new Container()): [express.Express, ApolloServer] => {
     const server = new ApolloServer({ typeDefs, resolvers, context: container });
 
     const app = express();
@@ -25,7 +25,5 @@ export const startServer = async (container = new Container()) => {
         },
     });
 
-    await app.listen({ port: 0 });
-    console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
-    return app;
+    return [app, server];
 };

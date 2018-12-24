@@ -15,8 +15,6 @@ export class Container {
 
     private connection = createConnection();
 
-    constructor() { }
-
     @Memoize(() => 1)
     public async userRepository(): Promise<Repository<User>> {
         const connection = await this.connection;

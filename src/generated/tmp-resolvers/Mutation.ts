@@ -11,4 +11,7 @@ export const Mutation: MutationResolvers.Type = {
   register: (parent, args, ctx) => {
     throw new Error("Resolver not implemented");
   },
+  login: (parent, args, ctx) => {
+    throw new Error("Resolver not implemented");
+  }
 };
