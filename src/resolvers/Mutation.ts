@@ -3,14 +3,14 @@ import { MutationResolvers } from "../generated/graphqlgen";
 
 export const Mutation: MutationResolvers.Type = {
     populateDB: async (_, data, c) => {
-        const bookingFactory = await c.bookingFactory();
-        const bookingRepository = await c.bookingRepository();
+        const bookingFactory = c.bookingFactory;
+        const bookingRepository = c.bookingRepository;
         const bookings = bookingFactory.createMany(data.bookingCount || 1);
         await bookingRepository.save(bookings);
         return true;
     },
     register: async (_, data, c) => {
-        const userRepository = await c.userRepository();
+        const userRepository = c.userRepository;
         const count = await userRepository.count({ where: { email: data.email } });
         if (count > 0) {
             throw new Error("user already registered");
@@ -21,7 +21,7 @@ export const Mutation: MutationResolvers.Type = {
         return userRepository.save(user);
     },
     login: async (_, data, c) => {
-        const userRepository = await c.userRepository();
+        const userRepository = c.userRepository;
         const user = await userRepository.findOneOrFail({ where: { email: data.email } });
         return bcrypt.compare(data.password, user.password);
     },

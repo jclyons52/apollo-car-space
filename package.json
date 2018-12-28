@@ -32,7 +32,8 @@
       "lodash-decorators": "^6.0.0",
       "mysql": "^2.14.1",
       "reflect-metadata": "^0.1.10",
-      "typeorm": "0.2.9"
+      "typeorm": "0.2.9",
+      "typescript-lazy-get-decorator": "^1.2.2"
    },
    "scripts": {
       "start": "ts-node src/index.ts",

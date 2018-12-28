@@ -3,7 +3,7 @@ import { BookingResolvers } from "../generated/graphqlgen";
 export const  Booking: BookingResolvers.Type = {
     ...BookingResolvers.defaultResolvers,
     carSpace: async (booking, _, c) => {
-        const carSpaceRepository = await c.carSpaceRepository();
+        const carSpaceRepository = c.carSpaceRepository;
         const carSpace = await carSpaceRepository.findOne({
             where: { bookings: [booking] },
         });
@@ -13,7 +13,7 @@ export const  Booking: BookingResolvers.Type = {
         return carSpace;
     },
     user: async (booking, _, c) => {
-        const userRepository = await c.userRepository();
+        const userRepository = c.userRepository;
         const user = await userRepository.findOne({
             where: { bookings: [booking] },
         });

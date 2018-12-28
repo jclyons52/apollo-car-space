@@ -1,5 +1,5 @@
-import { Memoize } from "lodash-decorators";
-import { createConnection, Repository } from "typeorm";
+import { Connection, createConnection, Repository } from "typeorm";
+import { LazyGetter } from "typescript-lazy-get-decorator";
 import { Booking } from "./entity/Booking";
 import { CarSpace } from "./entity/CarSpace";
 import { User } from "./entity/User";
@@ -13,38 +13,43 @@ export interface IConfig {
 
 export class Container {
 
-    private connection = createConnection();
+    public static async create(): Promise<Container> {
+        const connection = await createConnection();
+        return new Container(connection);
+    }
 
-    @Memoize(() => 1)
-    public async userRepository(): Promise<Repository<User>> {
-        const connection = await this.connection;
+    constructor(private connection: Connection) {}
+
+    @LazyGetter()
+    public get userRepository(): Repository<User> {
+        const connection = this.connection;
         return connection.getRepository(User);
     }
 
-    @Memoize(() => 1)
-    public async bookingRepository(): Promise<Repository<Booking>> {
-        const connection = await this.connection;
+    @LazyGetter()
+    public get bookingRepository(): Repository<Booking> {
+        const connection = this.connection;
         return connection.getRepository(Booking);
     }
 
-    @Memoize(() => 1)
-    public async carSpaceRepository(): Promise<Repository<CarSpace>> {
-        const connection = await this.connection;
+    @LazyGetter()
+    public get carSpaceRepository(): Repository<CarSpace> {
+        const connection = this.connection;
         return connection.getRepository(CarSpace);
     }
 
-    @Memoize(() => 1)
-    public userFactory(): UserFactory {
+    @LazyGetter()
+    public get userFactory(): UserFactory {
         return new UserFactory();
     }
 
-    @Memoize(() => 1)
-    public carSpaceFactory(): CarSpaceFactory {
-        return new CarSpaceFactory(this.userFactory());
+    @LazyGetter()
+    public get carSpaceFactory(): CarSpaceFactory {
+        return new CarSpaceFactory(this.userFactory);
     }
 
-    @Memoize(() => 1)
-    public bookingFactory(): BookingFactory {
-        return new BookingFactory(this.userFactory(), this.carSpaceFactory());
+    @LazyGetter()
+    public get bookingFactory(): BookingFactory {
+        return new BookingFactory(this.userFactory, this.carSpaceFactory);
     }
 }

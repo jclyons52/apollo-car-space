@@ -13,10 +13,11 @@ export class ResolverTest {
 
     @AsyncSetupFixture
     public async asyncSetupFixture() {
-        const container = new Container();
-        this.userFactory = container.userFactory();
-        this.userRepository = await container.userRepository();
-        this.app =  startServer(container)[0];
+        const c = await Container.create();
+        this.userFactory = c.userFactory;
+        this.userRepository = await c.userRepository;
+        const [app] = await startServer(c);
+        this.app =  app;
     }
 
     @AsyncTest()

@@ -6,8 +6,9 @@ import { Container } from "./Container";
 import { resolvers } from "./resolvers";
 import { typeDefs } from "./typeDefs";
 
-export const startServer = (container = new Container()): [express.Express, ApolloServer] => {
-    const server = new ApolloServer({ typeDefs, resolvers, context: container });
+export const startServer = async (container: Container | null = null): Promise<[express.Express, ApolloServer]> => {
+    const context = container || await Container.create();
+    const server = new ApolloServer({ typeDefs, resolvers, context });
 
     const app = express();
     app.use(
