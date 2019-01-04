@@ -2,11 +2,8 @@ import * as bcrypt from "bcryptjs";
 import { MutationResolvers } from "../generated/graphqlgen";
 
 export const Mutation: MutationResolvers.Type = {
-    populateDB: async (_, data, c) => {
-        const bookingFactory = c.bookingFactory;
-        const bookingRepository = c.bookingRepository;
-        const bookings = bookingFactory.createMany(data.bookingCount || 1);
-        await bookingRepository.save(bookings);
+    populateDB: async (_, __, c) => {
+        await c.bookingFactory.make({});
         return true;
     },
     register: async (_, data, c) => {

@@ -6,7 +6,7 @@ import { User } from "./User";
 @Entity()
 export class CarSpace {
 
-    public static create(params: Partial<CarSpace> & { owner: Promise<User> }): CarSpace {
+    public static create(params: Partial<CarSpace> & { owner: User }): CarSpace {
         const carSpace = new CarSpace();
         carSpace.address = params.address || "";
         carSpace.latitude = params.latitude || "";
@@ -28,10 +28,10 @@ export class CarSpace {
     public address: string;
 
     @ManyToOne(() => User)
-    public owner: Promise<User>;
+    public owner: User;
 
     @OneToMany(() => Booking, (booking) => booking.carSpace)
-    public bookings: Promise<Booking[]>;
+    public bookings: Booking[];
 
     @BeforeInsert()
     @BeforeUpdate()

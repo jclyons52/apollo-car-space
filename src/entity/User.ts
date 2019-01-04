@@ -12,8 +12,8 @@ export class User {
         user.userName = params.userName || "";
         user.email = params.email || "";
         user.password = params.password || "";
-        user.carSpaces = params.carSpaces || Promise.resolve([]);
-        user.bookings = params.bookings || Promise.resolve([]);
+        user.carSpaces = params.carSpaces || [];
+        user.bookings = params.bookings || [];
         return user;
     }
 
@@ -26,7 +26,7 @@ export class User {
     @Column()
     public userName: string;
 
-    @IsEmail()
+    // @IsEmail()
     @Column()
     public email: string;
 
@@ -34,10 +34,10 @@ export class User {
     public password: string;
 
     @OneToMany(() => CarSpace, (carSpace) => carSpace.owner)
-    public carSpaces: Promise<CarSpace[]>;
+    public carSpaces: CarSpace[];
 
     @OneToMany(() => Booking, (booking) => booking.user)
-    public bookings: Promise<Booking[]>;
+    public bookings: Booking[];
 
     @BeforeInsert()
     @BeforeUpdate()

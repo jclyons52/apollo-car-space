@@ -6,17 +6,19 @@ import { Container } from "./Container";
 import { User } from "./entity/User";
 import { UserFactory } from "./factory/UserFactory";
 import { startServer } from "./start";
+
 export class ResolverTest {
+    private ctx: Container;
     private userFactory: UserFactory;
     private userRepository: Repository<User>;
     private app: Express;
 
     @AsyncSetupFixture
     public async asyncSetupFixture() {
-        const c = await Container.create();
-        this.userFactory = c.userFactory;
-        this.userRepository = await c.userRepository;
-        const [app] = await startServer(c);
+        this.ctx = await Container.create();
+        this.userFactory = this.ctx.userFactory;
+        this.userRepository = this.ctx.userRepository;
+        const [app] = await startServer(this.ctx);
         this.app =  app;
     }
 
@@ -36,6 +38,35 @@ export class ResolverTest {
         Expect(users.length).toEqual(1);
         Expect(users[0].email).toEqual(user.email);
         Expect(users[0].password).not.toEqual(user.password);
+    }
+
+    @AsyncTest()
+    @Timeout(10000)
+    public async getUserBookings() {
+        const booking = await this.ctx.bookingFactory.make({});
+        const query = `
+            {
+                user(id: ${booking.user.id}) {
+                    bookings {
+                        start,
+                        end,
+                        carSpace {
+                            address
+                        },
+                        user {
+                            name
+                        }
+                    }
+                }
+            }
+        `;
+
+        const response = await request(this.app)
+        .post("/graphql")
+        .send({ query })
+        .set("Accept", "application/json")
+        .expect(200);
+        Expect(response.body.data.user.bookings[0].user.name).toEqual(booking.user.name);
     }
 
     private getRegisterMutation({name, userName, email, password }: User) {

@@ -40,16 +40,16 @@ export class Container {
 
     @LazyGetter()
     public get userFactory(): UserFactory {
-        return new UserFactory();
+        return new UserFactory(this.userRepository);
     }
 
     @LazyGetter()
     public get carSpaceFactory(): CarSpaceFactory {
-        return new CarSpaceFactory(this.userFactory);
+        return new CarSpaceFactory(this.userFactory, this.carSpaceRepository);
     }
 
     @LazyGetter()
     public get bookingFactory(): BookingFactory {
-        return new BookingFactory(this.userFactory, this.carSpaceFactory);
+        return new BookingFactory(this.userFactory, this.carSpaceFactory, this.bookingRepository);
     }
 }

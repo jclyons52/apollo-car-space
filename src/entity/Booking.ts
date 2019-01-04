@@ -38,10 +38,10 @@ export class Booking {
     public end: Date;
 
     @ManyToOne(() => CarSpace)
-    public carSpace: Promise<CarSpace>;
+    public carSpace: CarSpace;
 
     @ManyToOne(() => User)
-    public user: Promise<User>;
+    public user: User;
 
     @BeforeInsert()
     @BeforeUpdate()
