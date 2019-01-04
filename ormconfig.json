@@ -6,6 +6,7 @@
    "password": "secret",
    "database": "nest_car_space",
    "synchronize": true,
+   "dropSchema": true,
    "logging": false,
    "entities": [
       "src/entity/**/*.ts"
