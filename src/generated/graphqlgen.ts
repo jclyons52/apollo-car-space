@@ -18,6 +18,13 @@ export namespace QueryResolvers {
     info: GraphQLResolveInfo
   ) => User | null | Promise<User | null>;
 
+  export type UsersResolver = (
+    parent: undefined,
+    args: {},
+    ctx: Context,
+    info: GraphQLResolveInfo
+  ) => User[] | null | Promise<User[] | null>;
+
   export interface Type {
     user: (
       parent: undefined,
@@ -25,6 +32,13 @@ export namespace QueryResolvers {
       ctx: Context,
       info: GraphQLResolveInfo
     ) => User | null | Promise<User | null>;
+
+    users: (
+      parent: undefined,
+      args: {},
+      ctx: Context,
+      info: GraphQLResolveInfo
+    ) => User[] | null | Promise<User[] | null>;
   }
 }
 

@@ -1,4 +1,4 @@
-import { IsEmail, validate } from "class-validator";
+import { validate } from "class-validator";
 import {BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import { Booking } from "./Booking";
 import { CarSpace } from "./CarSpace";

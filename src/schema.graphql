@@ -2,6 +2,7 @@ scalar Date
 
 type Query {
     user(id: Int!): User
+    users: [User]
 }
 
 type Mutation {

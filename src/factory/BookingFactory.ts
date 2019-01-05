@@ -1,15 +1,15 @@
 import * as faker from "faker";
 import { Repository } from "typeorm";
 import { Booking } from "../entity/Booking";
-import { CarSpaceFactory } from "./CarSpaceFactory";
+import { CarSpace } from "../entity/CarSpace";
+import { User } from "../entity/User";
 import { Factory } from "./Factory";
-import { UserFactory } from "./UserFactory";
 
 export class BookingFactory extends Factory<Booking> {
 
     constructor(
-        private userFactory: UserFactory,
-        private carSpaceFactory: CarSpaceFactory,
+        private userFactory: Factory<User>,
+        private carSpaceFactory: Factory<CarSpace>,
         private bookingRepository: Repository<Booking>,
     ) {
         super();

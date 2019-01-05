@@ -22,7 +22,7 @@ export const startServer = async (container: Container | null = null): Promise<[
         app,
         cors: {
             credentials: true,
-            origin: "http://localhost:3000",
+            origin: "http://localhost:4200",
         },
     });
 

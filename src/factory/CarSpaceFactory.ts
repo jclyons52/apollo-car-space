@@ -1,12 +1,12 @@
 import * as faker from "faker";
 import { Repository } from "typeorm";
 import { CarSpace } from "../entity/CarSpace";
+import { User } from "../entity/User";
 import { Factory } from "./Factory";
-import { UserFactory } from "./UserFactory";
 
 export class CarSpaceFactory extends Factory<CarSpace> {
 
-    constructor(private userFactory: UserFactory, private carSpaceRepository: Repository<CarSpace>) {
+    constructor(private userFactory: Factory<User>, private carSpaceRepository: Repository<CarSpace>) {
         super();
     }
 
