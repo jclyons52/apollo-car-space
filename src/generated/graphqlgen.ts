@@ -346,6 +346,20 @@ export namespace MutationResolvers {
     password: string;
   }
 
+  export interface ArgsAddCarSpace {
+    ownerId: number;
+    longitude: string;
+    latitude: string;
+    address: string;
+  }
+
+  export interface ArgsAddBooking {
+    userId: number;
+    carSpaceId: number;
+    start: string;
+    end: string;
+  }
+
   export type PopulateDBResolver = (
     parent: undefined,
     args: ArgsPopulateDB,
@@ -366,6 +380,20 @@ export namespace MutationResolvers {
     ctx: Context,
     info: GraphQLResolveInfo
   ) => boolean | null | Promise<boolean | null>;
+
+  export type AddCarSpaceResolver = (
+    parent: undefined,
+    args: ArgsAddCarSpace,
+    ctx: Context,
+    info: GraphQLResolveInfo
+  ) => CarSpace | null | Promise<CarSpace | null>;
+
+  export type AddBookingResolver = (
+    parent: undefined,
+    args: ArgsAddBooking,
+    ctx: Context,
+    info: GraphQLResolveInfo
+  ) => Booking | null | Promise<Booking | null>;
 
   export interface Type {
     populateDB: (
@@ -388,6 +416,20 @@ export namespace MutationResolvers {
       ctx: Context,
       info: GraphQLResolveInfo
     ) => boolean | null | Promise<boolean | null>;
+
+    addCarSpace: (
+      parent: undefined,
+      args: ArgsAddCarSpace,
+      ctx: Context,
+      info: GraphQLResolveInfo
+    ) => CarSpace | null | Promise<CarSpace | null>;
+
+    addBooking: (
+      parent: undefined,
+      args: ArgsAddBooking,
+      ctx: Context,
+      info: GraphQLResolveInfo
+    ) => Booking | null | Promise<Booking | null>;
   }
 }
 

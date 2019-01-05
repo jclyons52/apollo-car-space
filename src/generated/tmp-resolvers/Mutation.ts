@@ -13,5 +13,11 @@ export const Mutation: MutationResolvers.Type = {
   },
   login: (parent, args, ctx) => {
     throw new Error("Resolver not implemented");
+  },
+  addCarSpace: (parent, args, ctx) => {
+    throw new Error("Resolver not implemented");
+  },
+  addBooking: (parent, args, ctx) => {
+    throw new Error("Resolver not implemented");
   }
 };
